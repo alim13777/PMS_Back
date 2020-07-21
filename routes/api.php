@@ -13,8 +13,16 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Auth::routes();
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('auth:sanctum');
+Route::group(["prefix"=>"papers"],function(){
+    Route::get("/",function (Request $request){
+        return \App\models\paper::all();
+    })->name('readPaper')->middleware('can:read-paper');
+});

@@ -101,7 +101,6 @@ class CreateTables extends Migration
             $table->timestamps();
         });
         Schema::create('partyRoles', function (Blueprint $table) {
-            $table->id('id');
             $table->unsignedBigInteger('partyId');
             $table->unsignedBigInteger('roleId');
             $table->timestamps();

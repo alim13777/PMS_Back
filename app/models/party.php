@@ -16,4 +16,14 @@ class party extends Model
     public function person(){
         return $this->hasOne('App\models\person','partyId');
     }
+    public function role(){
+       return $this->belongsToMany('App\models\role','partyRoles');
+    }
+    public function hasAccess(array $permissions)
+    {
+            foreach ($this->role() as $role){
+                if($role->hasAccess($permissions)){return true;}
+            }
+            return false;
+    }
 }

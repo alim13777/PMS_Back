@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
-    ];
+];
 
     /**
      * Register any authentication / authorization services.
@@ -24,7 +24,18 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
+        $this->registerPaperPolicies();
         //
+    }
+    public function registerPaperPolicies(){
+        Gate::define('create-paper',function ($user){
+            return $user->party()->hasAccess(['create-post']);
+        });
+        Gate::define('read-paper',function ($user){
+           return $user->party()->hasAccess(['read-paper']);
+        });
+        Gate::define('read-paper',function ($user){
+            return $user->party()->hasAccess(['submit-paper']);
+        });
     }
 }
