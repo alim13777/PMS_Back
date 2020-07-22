@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class paper extends Model
 {
-    protected $fillable=["paperId","title","type","comment","keyWords","topic","state","submitDate","acceptDate"];
+    protected $fillable=["paperId","title","type","comment","keyWords","topic"];
     protected $table="paper";
     protected $primaryKey="paperId";
 

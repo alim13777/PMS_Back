@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\models\party;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum');
 Route::group(["prefix"=>"papers"],function(){
     Route::get("/",function (Request $request){
-        return \App\models\paper::all();
+       return \App\models\paper::all();
     })->name('readPaper')->middleware('can:read-paper');
 });

@@ -93,20 +93,20 @@ class CreateTables extends Migration
 
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
         });
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id('id');
+        Schema::create('role', function (Blueprint $table) {
+            $table->id('roleId');
             $table->string('name');
             $table->string('slug')->unique();
             $table->jsonb('permissions');
             $table->timestamps();
         });
-        Schema::create('partyRoles', function (Blueprint $table) {
+        Schema::create('party_role', function (Blueprint $table) {
             $table->unsignedBigInteger('partyId');
-            $table->unsignedBigInteger('roleId');
+            $table->unsignedBigInteger('role_roleId');
             $table->timestamps();
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
-            $table->foreign('roleId')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('role_roleId')->references('roleId')->on('role')->onDelete('cascade');
         });
         Schema::enableForeignKeyConstraints();
     }

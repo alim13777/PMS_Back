@@ -2,18 +2,19 @@
 
 namespace App\models;
 
+use App\models\party;
 use Illuminate\Database\Eloquent\Model;
 
 class role extends Model
 {
-    protected $fillable=['name','slug','permissions'];
-    protected $table='roles';
-    protected $primaryKey='id';
+    protected $fillable=['roleId','name','slug','permissions'];
+    protected $table='role';
+    protected $primaryKey='roleId';
     protected $casts = [
         'permissions' => 'array',
     ];
     public function party(){
-        return  $this->belongsToMany('App\models\party','partyRoles');
+        return $this->belongsToMany(party::class,'party_role','roleId');
     }
     public function hasAccess(array $permissions){
         foreach ($permissions as $permission){
