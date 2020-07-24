@@ -50,10 +50,9 @@ class CreateTables extends Migration
         Schema::create('organization', function (Blueprint $table) {
             $table->id("partyId");
             $table->mediumText("name");
+            $table->mediumText("type");
             $table->timestamps();
-
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
-
         });
         Schema::create('paper', function (Blueprint $table) {
             $table->id('paperId');
@@ -107,6 +106,10 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
             $table->foreign('role_roleId')->references('roleId')->on('role')->onDelete('cascade');
+        });
+        Schema::create('publisher', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();
     }
