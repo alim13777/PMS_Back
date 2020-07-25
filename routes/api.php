@@ -14,15 +14,13 @@ use App\models\party;
 |
 */
 Auth::routes();
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth:sanctum');
-Route::group(["prefix"=>"papers"],function(){
-    Route::get("/",function (Request $request){
-       return \App\models\paper::all();
-    })->name('readPaper')->middleware('can:read-paper');
+Route::group(["prefix"=>"paper"],function(){
+    Route::get("/",'paperController@index')->middleware('auth:sanctum');
+    Route::get("/{paperId}","paperController@find")->middleware('auth:sanctum');
+    Route::get("/party/{partyId}","paperController@findParty")->middleware('auth:sanctum');
+    Route::post("/","paperController@createPaper")->middleware('auth:sanctum');
 });
+

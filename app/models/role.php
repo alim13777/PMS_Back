@@ -14,7 +14,7 @@ class role extends Model
         'permissions' => 'array',
     ];
     public function party(){
-        return $this->belongsToMany(party::class,'party_role','roleId');
+        return $this->belongsToMany(party::class,'party_role','roleId',"partyId");
     }
     public function hasAccess(array $permissions){
         foreach ($permissions as $permission){

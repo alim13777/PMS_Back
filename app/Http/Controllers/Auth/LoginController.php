@@ -41,7 +41,8 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         $data=$user->party->person()->get()[0];
-        $data=array("firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"userName"=>$user["name"]);
+        $partyId=$user->partyId;
+        $data=array("partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"userName"=>$user["name"]);
         return response()->json($data);
     }
 }

@@ -18,7 +18,10 @@ class party extends Model
         return $this->hasOne('App\models\person','partyId');
     }
     public function role(){
-       return $this->belongsToMany(role::class,'party_role','partyId');
+       return $this->belongsToMany(role::class,'party_role','partyId',"roleId");
+    }
+    public function paper(){
+        return $this->belongsToMany(paper::class,"paper_party","partyId","paperId");
     }
     public function hasAccess(array $permissions)
     {

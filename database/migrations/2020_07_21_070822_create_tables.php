@@ -26,15 +26,12 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
-        Schema::enableForeignKeyConstraints();
-        Schema::disableForeignKeyConstraints();
         Schema::create('party', function (Blueprint $table) {
             $table->id("partyId");
             $table->mediumText("type");
             $table->mediumText("owner");
             $table->timestamps();
         });
-        Schema::enableForeignKeyConstraints();
         Schema::create('person', function (Blueprint $table) {
             $table->id("partyId");
             $table->mediumText("firstName");
@@ -63,15 +60,15 @@ class CreateTables extends Migration
             $table->mediumText('topic');
             $table->timestamps();
         });
-        Schema::create('paperParty', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger("partyId");
+        Schema::create('paper_party', function (Blueprint $table) {
             $table->unsignedBigInteger("paperId");
+            $table->unsignedBigInteger("partyId");
             $table->mediumText("relation");
             $table->timestamps();
 
-            $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
+            $table->unique("paperId","partyId");
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
+            $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
         schema::create('education', function (Blueprint $table) {
             $table->id();
@@ -101,15 +98,16 @@ class CreateTables extends Migration
         });
         Schema::create('party_role', function (Blueprint $table) {
             $table->unsignedBigInteger('partyId');
-            $table->unsignedBigInteger('role_roleId');
+            $table->unsignedBigInteger('roleId');
             $table->timestamps();
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
-            $table->foreign('role_roleId')->references('roleId')->on('role')->onDelete('cascade');
+            $table->foreign('roleId')->references('roleId')->on('role')->onDelete('cascade');
         });
         Schema::create('publisher', function (Blueprint $table) {
-            $table->id();
+            $table->id('partyId');
             $table->timestamps();
+            $table->foreign('partyId')->references("partyId")->on("organization")->onDelete('cascade');
         });
         Schema::enableForeignKeyConstraints();
     }
