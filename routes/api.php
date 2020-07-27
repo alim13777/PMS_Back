@@ -13,7 +13,7 @@ use App\models\party;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Auth::routes();
+Auth::routes(['verify' => true]);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -23,4 +23,7 @@ Route::group(["prefix"=>"paper"],function(){
     Route::get("/party/{partyId}","paperController@findParty")->middleware('auth:sanctum');
     Route::post("/","paperController@createPaper")->middleware('auth:sanctum');
 });
+
+Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
+Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use  HasApiTokens,Notifiable;
 
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','partyId'
+        'email', 'password','partyId','account','active','language'
     ];
 
     /**
@@ -39,5 +39,9 @@ class User extends Authenticatable
     ];
     public function party(){
         return $this->hasOne('App\models\party','partyId');
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new Notifications\UserVerification);
     }
 }
