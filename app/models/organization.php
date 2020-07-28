@@ -12,7 +12,4 @@ class organization extends Model
     public function party(){
         return $this->hasOne("App\models\party","partyId");
     }
-    public function publisher(){
-        return $this->hasOne("App/models/publisher", 'partyId');
-    }
 }

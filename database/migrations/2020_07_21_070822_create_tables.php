@@ -47,7 +47,9 @@ class CreateTables extends Migration
         });
         Schema::create('organization', function (Blueprint $table) {
             $table->id("partyId");
-            $table->mediumText("name");
+            $table->mediumText("FaName");
+            $table->mediumText("EnName");
+            $table->mediumText("externalId");
             $table->mediumText("type");
             $table->timestamps();
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
@@ -104,11 +106,6 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
             $table->foreign('roleId')->references('roleId')->on('role')->onDelete('cascade');
-        });
-        Schema::create('publisher', function (Blueprint $table) {
-            $table->id('partyId');
-            $table->timestamps();
-            $table->foreign('partyId')->references("partyId")->on("organization")->onDelete('cascade');
         });
         Schema::enableForeignKeyConstraints();
     }

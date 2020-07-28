@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use App\models\party;
-
+use Illuminate\Support\Facades\DB;
 class VerificationController extends Controller
 {
     public function verify(Request $request) {
@@ -17,14 +17,12 @@ class VerificationController extends Controller
         return redirect()->to('/');
     }
     public function resend(Request $request) {
-
-        $partyId = $request->partyId;
-        $user = party::find($partyId)->user;
-
+        $email=$request->email;
+        $user=User::where('email', $email)->firstOrFail();
         if ($user->hasVerifiedEmail()) {
             return response()->json(["msg" => "Email already verified."], 400);
         }
         $user->sendEmailVerificationNotification();
-        return response()->json(["msg" => "Email verification link sent on your email id"]);
+        return response()->json(["msg" => "Email verification link sent on your email id"],400);
     }
 }
