@@ -42,7 +42,7 @@ class LoginController extends Controller
     {
         $data=$user->party->person()->get()[0];
         $partyId=$user->partyId;
-        $data=array("partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"]);
+        $data=array("partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"email"=>$user["email"]);
         return response()->json($data);
     }
     public function login(Request $request)

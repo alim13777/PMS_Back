@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\models\paperState;
 use Illuminate\Support\Facades\Hash;
 use phpDocumentor\Reflection\Types\Null_;
+use Illuminate\Support\Facades\DB;
 
 class partyController extends Controller
 {
@@ -34,6 +35,16 @@ class partyController extends Controller
             'language'=>$data["language"],
             'active'=>true,
         ]);
+    }
+    public function searchPerson(Request $request){
+        $person=DB::table('person')
+            ->join('users','person.partyId','=','users.partyId')
+            ->select('person.*',"users.email")
+            ->where('person.firstName','like',"%".$request['firstName']."%")
+            ->where('person.lastName','like',"%".$request["lastName"]."%")
+            ->where('users.email','like',"%".$request["email"]."%")
+            ->get();
+        return response()->json($person);
     }
 
 

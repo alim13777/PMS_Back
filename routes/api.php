@@ -23,7 +23,10 @@ Route::group(["prefix"=>"paper"],function(){
     Route::get("/party/{partyId}","paperController@findParty")->middleware('auth:sanctum');
     Route::post("/","paperController@createPaper")->middleware('auth:sanctum');
 });
+Route::group(["prefix"=>"person"],function(){
+    Route::get("/search","partyController@searchPerson");
 
+});
 Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
