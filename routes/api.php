@@ -21,7 +21,7 @@ Route::group(["prefix"=>"paper"],function(){
     Route::get("/",'paperController@index')->middleware('auth:sanctum');
     Route::get("/{paperId}","paperController@find")->middleware('auth:sanctum');
     Route::get("/party/{partyId}","paperController@findParty")->middleware('auth:sanctum');
-    Route::post("/","paperController@createPaper")->middleware('auth:sanctum');
+    Route::post("/","paperController@createPaper");
 });
 Route::group(["prefix"=>"person"],function(){
     Route::get("/search","partyController@searchPerson");

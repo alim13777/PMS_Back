@@ -22,8 +22,12 @@ class paperController extends Controller
 
     public function createPaper(Request $request){
         $paper=paper::create($request->paper);
-        $this->paperParty($request->relation,$paper);
-        paperState::create(["paperId"=>$paper->paperId,"state"=>"submit"]);
+        $publisher=array("partyId"=>$request->publisher["publisher"],"relation"=>"publisher");
+        $paperParty=$request->authors;
+        array_push($paperParty ,$publisher);
+
+        $this->paperParty($paperParty,$paper);
+        paperState::create(["paperId"=>$paper->paperId,"state"=>"readySubmit"]);
         return response()->json(["paperId"=>$paper->paperId],200);
     }
     public function paperParty($data,$paper){
