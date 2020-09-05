@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class organization extends Model
 {
-    protected $fillable=["partyId","name","type"];
+    protected $fillable=["partyId","name","type","cityId","nameFa"];
     protected $table="organization";
     protected $primaryKey="partyId";
     public function party(){

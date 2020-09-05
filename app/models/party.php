@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class party extends Model
 {
-    protected $fillable=['partyId','type','owner'];
+    protected $fillable=['partyId','identity','owner'];
     protected $table="party";
     protected $primaryKey="partyId";
 

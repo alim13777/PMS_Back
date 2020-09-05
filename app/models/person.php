@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\models\party;
 class person extends Model
 {
-    protected $fillable=['partyId','firstName','lastName','suffix','gender','birthDate','degreeId'];
+    protected $fillable=['partyId','firstName','lastName','prefix','gender','birthDate','degree'];
     public function party(){
         return $this->hasOne('App\models\party','partyId');
       }

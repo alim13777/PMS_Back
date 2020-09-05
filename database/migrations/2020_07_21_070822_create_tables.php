@@ -14,14 +14,14 @@ class CreateTables extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('partyId');
             $table->mediumText("account");
-            $table->mediumText("language");
+            $table->mediumText("locale");
             $table->rememberToken();
             $table->timestamps();
 
@@ -29,16 +29,16 @@ class CreateTables extends Migration
         });
         Schema::create('party', function (Blueprint $table) {
             $table->id("partyId");
-            $table->mediumText("type");
             $table->mediumText("owner");
+            $table->mediumText("identity");
             $table->timestamps();
         });
         Schema::create('person', function (Blueprint $table) {
             $table->id("partyId");
             $table->mediumText("firstName");
             $table->mediumText("lastName");
-            $table->mediumText("suffix");
-            $table->mediumText("degreeId");
+            $table->mediumText("prefix");
+            $table->mediumText("degree");
             $table->binary("gender");
             $table->timestamp("birthDate");
             $table->timestamps();
@@ -47,9 +47,9 @@ class CreateTables extends Migration
         });
         Schema::create('organization', function (Blueprint $table) {
             $table->id("partyId");
-            $table->mediumText("FaName");
-            $table->mediumText("EnName");
-            $table->mediumText("externalId");
+            $table->mediumText("name");
+            $table->mediumText("nameFa");
+            $table->mediumText("cityId");
             $table->mediumText("type");
             $table->timestamps();
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
@@ -58,15 +58,19 @@ class CreateTables extends Migration
             $table->id('paperId');
             $table->mediumText('title');
             $table->mediumText('type');
-            $table->mediumText('comment');
-            $table->mediumText('keyWords');
-            $table->mediumText('topic');
+            $table->mediumText('description');
+            $table->mediumText('keywords');
             $table->timestamps();
         });
         Schema::create('paper_party', function (Blueprint $table) {
             $table->unsignedBigInteger("paperId");
             $table->unsignedBigInteger("partyId");
             $table->mediumText("relation");
+            $table->mediumText("localId");
+            $table->mediumText("role");
+            $table->timestamp("startDate");
+            $table->timestamp("endDate");
+
             $table->timestamps();
 
             $table->unique("paperId","partyId");
@@ -84,10 +88,12 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
-        Schema::create('paperState', function (Blueprint $table) {
+        Schema::create('paperStatus', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('paperId');
-            $table->mediumText('state');
+            $table->unsignedBigInteger('partyId');
+            $table->mediumText('status');
+            $table->timestamp('date');
             $table->timestamps();
 
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
@@ -106,6 +112,19 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
             $table->foreign('roleId')->references('roleId')->on('role')->onDelete('cascade');
+        });
+        Schema::create('journal',function(Blueprint $table){
+            $table->id("partyId");
+            $table->mediumText("issn");
+            $table->mediumText("impactFactor");
+            $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
+        });
+        Schema::create('contact',function(Blueprint $table){
+            $table->id();
+            $table->unsignedBigInteger("partyId");
+            $table->mediumText("type");
+            $table->mediumText("value");
+            $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
         Schema::enableForeignKeyConstraints();
     }
