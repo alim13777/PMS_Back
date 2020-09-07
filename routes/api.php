@@ -13,20 +13,25 @@ use App\models\party;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Auth::routes(['verify' => true]);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::group(["prefix"=>"paper"],function(){
-    Route::get("/",'paperController@index')->middleware('auth:sanctum');
-    Route::get("/{paperId}","paperController@find")->middleware('auth:sanctum');
-    Route::get("/party/{partyId}","paperController@findParty")->middleware('auth:sanctum');
-    Route::post("/","paperController@createPaper");
-});
-Route::group(["prefix"=>"person"],function(){
-    Route::get("/search","partyController@searchPerson");
-
-});
 Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
+
+Route::get("/paper/party",function(Request $request){
+    $partyId=$request->user()->partyId;
+    return \App\Http\Controllers\paperController::findPartyPaper($partyId);
+})->middleware('auth:sanctum');
+Route::get("/paper/party/{partyId}",function($partyId){
+    return \App\Http\Controllers\paperController::findPartyPaper($partyId);
+})->middleware('auth:sanctum');
+Route::get("/paper",function(){
+    return \App\Http\Controllers\paperController::index();
+})->middleware('auth:sanctum');
+Route::get("/paper/{paperId}",function($paperId){
+    return \App\Http\Controllers\paperController::find($paperId);
+})->middleware('auth:sanctum');

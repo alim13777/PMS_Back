@@ -14,7 +14,7 @@ class CreateTables extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -65,14 +65,11 @@ class CreateTables extends Migration
         Schema::create('paper_party', function (Blueprint $table) {
             $table->unsignedBigInteger("paperId");
             $table->unsignedBigInteger("partyId");
-            $table->mediumText("relation");
             $table->mediumText("localId");
             $table->mediumText("role");
             $table->timestamp("startDate");
             $table->timestamp("endDate");
-
             $table->timestamps();
-
             $table->unique("paperId","partyId");
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');

@@ -15,16 +15,15 @@ use Illuminate\Support\Facades\DB;
 
 class partyController extends Controller
 {
-    public function createParty($data,$type){
-        $partyId=party::create(["type"=>"person","owner"=>""])->partyId;
-        if($type=="person"){
+    public function createParty($data,$identity){
+        $partyId=party::create(["identity"=>"person","owner"=>""])->partyId;
+        if($identity=="person"){
             $this->createPerson($data,$partyId);
         }
         return $partyId;
     }
-
     public function createPerson($data,$partyId){
-        person::create(["partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"suffix"=>"","degreeId"=>"","gender"=>"","birthDate"=>"2000-01-01"]);
+        person::create(["partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"prefix"=>"","degree"=>"","gender"=>"","birthDate"=>"2000-01-01"]);
     }
     public function createUser(array $data,$partyId){
        return User::create([
@@ -32,7 +31,7 @@ class partyController extends Controller
             'password' => Hash::make($data['password']),
             'account'=>$data["account"],
             'partyId'=>$partyId,
-            'language'=>$data["language"],
+            'locale'=>$data["language"],
             'active'=>true,
         ]);
     }
