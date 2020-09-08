@@ -35,3 +35,5 @@ Route::get("/paper",function(){
 Route::get("/paper/{paperId}",function($paperId){
     return \App\Http\Controllers\paperController::find($paperId);
 })->middleware('auth:sanctum');
+Route::post("/paper","paperController@createPaper")->middleware("auth:sanctum");
+Route::put("/paper","paperController@editPaper")->middleware("auth:sanctum");

@@ -65,7 +65,6 @@ class CreateTables extends Migration
         Schema::create('paper_party', function (Blueprint $table) {
             $table->unsignedBigInteger("paperId");
             $table->unsignedBigInteger("partyId");
-            $table->mediumText("localId");
             $table->mediumText("role");
             $table->timestamp("startDate");
             $table->timestamp("endDate");
@@ -85,7 +84,7 @@ class CreateTables extends Migration
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
-        Schema::create('paperStatus', function (Blueprint $table) {
+        Schema::create('paperState', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('paperId');
             $table->unsignedBigInteger('partyId');
