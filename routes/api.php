@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\models\party;
+use App\Http\Controllers\paperController;
+use App\models\paper;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -37,3 +39,21 @@ Route::get("/paper/{paperId}",function($paperId){
 })->middleware('auth:sanctum');
 Route::post("/paper","paperController@createPaper")->middleware("auth:sanctum");
 Route::put("/paper","paperController@editPaper")->middleware("auth:sanctum");
+Route::post("/paper/party",function(Request $request){
+    $paper=new paper();
+    $paper->paperId= $request->paperParty[0]["paperId"];
+    $paperController=new paperController();
+    return $paperController->addPaperParty($request->paperParty,$paper);
+})->middleware("auth:sanctum");
+Route::delete("/paper/party",function(Request $request){
+    $paper=new paper();
+    $paper->paperId= $request->paperParty[0]["paperId"];
+    $paperController=new paperController();
+    return $paperController->deletePaperParty($request->paperParty,$paper);
+})->middleware("auth:sanctum");
+Route::put("/paper/party",function(Request $request){
+    $paper=new paper();
+    $paper->paperId= $request->paperParty[0]["paperId"];
+    $paperController=new paperController();
+    return $paperController->updatePaperParty($request->paperParty,$paper);
+})->middleware("auth:sanctum");
