@@ -37,10 +37,10 @@ class CreateTables extends Migration
             $table->id("partyId");
             $table->mediumText("firstName");
             $table->mediumText("lastName");
-            $table->mediumText("prefix");
-            $table->mediumText("degree");
+            $table->mediumText("prefix")->nullable();
+            $table->mediumText("degree")->nullable();
             $table->binary("gender");
-            $table->timestamp("birthDate");
+            $table->timestamp("birthDate")->nullable();
             $table->timestamps();
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
@@ -48,9 +48,9 @@ class CreateTables extends Migration
         Schema::create('organization', function (Blueprint $table) {
             $table->id("partyId");
             $table->mediumText("name");
-            $table->mediumText("nameFa");
-            $table->mediumText("cityId");
-            $table->mediumText("type");
+            $table->mediumText("nameFa")->nullable();
+            $table->mediumText("cityId")->nullable();
+            $table->mediumText("type")->nullable();
             $table->timestamps();
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
@@ -58,8 +58,8 @@ class CreateTables extends Migration
             $table->id('paperId');
             $table->mediumText('title');
             $table->mediumText('type');
-            $table->mediumText('description');
-            $table->mediumText('keywords');
+            $table->mediumText('description')->nullable();
+            $table->mediumText('keywords')->nullable();
             $table->timestamps();
         });
         Schema::create('paper_party', function (Blueprint $table) {
@@ -67,7 +67,7 @@ class CreateTables extends Migration
             $table->unsignedBigInteger("partyId");
             $table->mediumText("role");
             $table->timestamp("startDate");
-            $table->timestamp("endDate");
+            $table->timestamp("endDate")->nullable();
             $table->timestamps();
             $table->unique("paperId","partyId");
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
@@ -79,7 +79,7 @@ class CreateTables extends Migration
             $table->bigInteger("school");
             $table->timestamp("degreeId");
             $table->timestamp("startDate");
-            $table->timestamp("endDate");
+            $table->timestamp("endDate")->nullable();
             $table->timestamps();
 
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
@@ -111,8 +111,8 @@ class CreateTables extends Migration
         });
         Schema::create('journal',function(Blueprint $table){
             $table->id("partyId");
-            $table->mediumText("issn");
-            $table->mediumText("impactFactor");
+            $table->mediumText("issn")->nullable();
+            $table->mediumText("impactFactor")->nullable();
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
         Schema::create('contact',function(Blueprint $table){

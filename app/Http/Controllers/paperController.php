@@ -80,7 +80,7 @@ class paperController extends Controller
         $paperId=$paper->paperId;
         $relArray=array();
         foreach ($data as $rel){
-            $arr=array("paperId"=>$paperId);
+            $arr=array("paperId"=>$paperId,"startDate"=>now());
             $rel+=$arr;
             array_push($relArray,$rel);
         }
