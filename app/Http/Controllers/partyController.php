@@ -58,5 +58,4 @@ class partyController extends Controller
         return response()->json(array("partyId"=>"$partyId"));
     }
 
-
 }

@@ -23,22 +23,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
-
 Route::get("/paper/party",function(Request $request){
     $partyId=$request->user()->partyId;
-    return \App\Http\Controllers\paperController::findPartyPaper($partyId);
+    $paperController=new paperController();
+    return $paperController->findPartyPaper($partyId);
 })->middleware('auth:sanctum');
 Route::get("/paper/party/{partyId}",function($partyId){
-    return \App\Http\Controllers\paperController::findPartyPaper($partyId);
+    $paperController=new paperController();
+    return $paperController->findPartyPaper($partyId);
 })->middleware('auth:sanctum');
 Route::get("/paper",function(){
-    return \App\Http\Controllers\paperController::index();
+    $paperController=new paperController();
+    return $paperController->index();
 })->middleware('auth:sanctum');
 Route::get("/paper/{paperId}",function($paperId){
-    return \App\Http\Controllers\paperController::find($paperId);
+    $paperController=new paperController();
+    return $paperController->find($paperId);
 })->middleware('auth:sanctum');
-Route::post("/paper","paperController@createPaper")->middleware("auth:sanctum");
-Route::put("/paper","paperController@editPaper")->middleware("auth:sanctum");
+Route::post("/paper",function (Request $request){
+    $paperController=new paperController();
+    return $paperController->createPaper($request);
+})->middleware("auth:sanctum");
+Route::put("/paper",function (Request $request){
+    $paperController=new paperController();
+    return $paperController->editPaper($request);
+})->middleware("auth:sanctum");
 Route::post("/paper/party",function(Request $request){
     $paper=new paper();
     $paper->paperId= $request->paperId;

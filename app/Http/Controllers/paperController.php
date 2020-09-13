@@ -15,22 +15,22 @@ use Ramsey\Collection\Collection;
 
 class paperController extends Controller
 {
-    public static function index()
+    public function index()
     {
         return paper::all();
     }
-    public static function findPartyPaper($partyId){
+    public function findPartyPaper($partyId){
     $partyObject = new party();
     $partyObject->partyId=$partyId;
     $papers = $partyObject->paper()->get();
     $response = array();
     foreach ($papers as $paper) {
-        $res=paperController::find($paper->paperId)->original;
+        $res=$this->find($paper->paperId)->original;
         array_push($response,$res);
     }
     return response()->json($response);
     }
-    public static function find($paperId){
+    public function find($paperId){
         $papers = paper::where("paperId",$paperId)->get();
         $response = array();
         foreach ($papers as $paper) {
@@ -48,9 +48,9 @@ class paperController extends Controller
                         array_push($authors, $author);
                     }
                     if($organization->count()>0) {
-                        $status=paperState::all()->where("paperId","=",$paperId)->where("partyId","=",$party->partyId);
-                        $state=$status->count()>0?$status[0]->status:"";
-                        $date=$status->count()>0?$status[0]->date:"";
+                        $paperStatus=$this->getPaperStatus($party->partyId,$paperId);
+                        $state=$paperStatus->count()>0?$paperStatus[0]->status:"";
+                        $date=$paperStatus->count()>0?$paperStatus[0]->date:"";
                         $publisher = array("partyId" => $party->partyId,"name"=>$organization[0]->name,"status"=>$state,"date"=>$date);
                         array_push($publishers, $publisher);
                     }
@@ -59,8 +59,7 @@ class paperController extends Controller
         }
         return response()->json($response);
     }
-
-    public  function createPaper(Request $request){
+    public function createPaper($request){
         $paper=paper::create($request->paper);
         $author=$request->authors;
         $publisher=$request->publisher;
@@ -84,7 +83,7 @@ class paperController extends Controller
         $paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
         $status=$publisher["status"];
-        $this->addpaperStaus($arrPub,$status);
+        $this->addPaperStatus($arrPub,$status);
 
     }
     public function deletePaperParty($data,$paper){
@@ -106,12 +105,30 @@ class paperController extends Controller
             return $paper->party()->updateExistingPivot($arr, array('role' => $rel["role"]), false);
         }
     }
+    public function getPaperParty($partyId,$paperId){
+        $party=new party();
+        $party->partyId=$partyId;
+        $paperId=$paperId;
+        return $party->paper()->find($paperId);
+    }
+
     public function addPaperStatus($data,$status){
         $party=new party();
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];
-        $id=$party->paper()->find($paperId)->pivot->id;
+        $id=$this->getPaperParty($paperId,$party->partyId);
+        if($id){$id=$id->pivot->id;
         paperState::create(["statusId"=>$id,"status"=>$status,"date"=>now()]);
+        }
     }
-
+    public function getPaperStatus($partyId,$paperId)
+    {
+        $status = $this->getPaperParty($partyId, $paperId);
+        $paperState=new paperState();
+        if ($status) {
+        $statusId = $status->pivot->id;
+        $paperState = $paperState->get($statusId);
+        }
+        return $paperState;
+    }
 }

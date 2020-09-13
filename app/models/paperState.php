@@ -11,4 +11,8 @@ class paperState extends Model
     public function paperState(){
         return $this->belongsTo("App\models\paper","paperId");
     }
+    public function get($statusId){
+        return paperState::all()->where("statudId","=",$statusId);
+    }
+
 }
