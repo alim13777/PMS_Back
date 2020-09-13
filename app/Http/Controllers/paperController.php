@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\models\paper;
 use App\models\party;
 use App\models\person;
@@ -11,8 +9,6 @@ use Illuminate\Http\Request;
 use App\models\paperState;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Collection\Collection;
-
-
 class paperController extends Controller
 {
     public function index()
@@ -111,7 +107,6 @@ class paperController extends Controller
         $paperId=$paperId;
         return $party->paper()->find($paperId);
     }
-
     public function addPaperStatus($data,$status){
         $party=new party();
         $party->partyId=$data["partyId"];
@@ -131,4 +126,5 @@ class paperController extends Controller
         }
         return $paperState;
     }
+
 }
