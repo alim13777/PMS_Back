@@ -37,7 +37,7 @@ class partyController extends Controller
             'active'=>true,
         ]);
     }
-    public static function searchPerson($request){
+    public function searchPerson($request){
         $person=DB::table('person')
             ->join('users','person.partyId','=','users.partyId')
             ->select('person.*',"users.email")
@@ -47,13 +47,13 @@ class partyController extends Controller
             ->get();
         return response()->json($person);
     }
-    public static function indexJournal(){
+    public function indexJournal(){
         return DB::table('organization')
             ->join('journal','organization.partyId','=','journal.partyId')
             ->select('organization.partyId',"organization.name")
             ->get();
     }
-    public static function updatePerson($data){
+    public function updatePerson($data){
         $partyId=person::where("partyId",$data->person["partyId"])->update($data->person);
         return response()->json(array("partyId"=>"$partyId"));
     }

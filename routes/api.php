@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\models\party;
 use App\Http\Controllers\paperController;
+use App\Http\Controllers\partyController;
 use App\models\paper;
 /*
 |--------------------------------------------------------------------------
@@ -74,11 +75,14 @@ Route::post("/paper/paperState",function (Request $request){
     return $paperController->addPaperStatus($request->publisher,$status);
 });
 Route::get("/party/person",function (Request $request){
-    return \App\Http\Controllers\partyController::searchPerson($request);
+    $partyController=new partyController();
+    return $partyController->searchPerson($request);
 });
 Route::get("/party/journal",function(){
-    return \App\Http\Controllers\partyController::indexJournal();
+    $partyController=new partyController();
+    return $partyController->indexJournal();
 });
 Route::put("/party/person",function (Request $request){
-    return \App\Http\Controllers\partyController::updatePerson($request);
+    $partyController=new partyController();
+    return $partyController->updatePerson($request);
 });
