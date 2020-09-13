@@ -62,28 +62,30 @@ class paperController extends Controller
 
     public  function createPaper(Request $request){
         $paper=paper::create($request->paper);
-        $publisherId= $request->publisher["partyId"];
-        $status= $request->publisher["status"];
-        $publisher=array("partyId"=>$publisherId,"role"=>"publisher");
-        $paperParty=$request->authors;
-        array_push($paperParty ,$publisher);
-
-        $this->addPaperParty($paperParty,$paper);
-        paperState::create(["paperId"=>$paper->paperId,"partyId"=>$publisherId,"date"=>now(),"status"=>$status]);
+        $author=$request->authors;
+        $publisher=$request->publisher;
+        $this->addPaperParty($author,$publisher,$paper);
         return response()->json(["paperId"=>$paper->paperId],200);
     }
     public function editPaper(Request $request){
         $paperId=$request->paper["paperId"];
         return paper::where("paperId",$paperId)->update($request->paper);
     }
-    public function addPaperParty($data,$paper){
+    public function addPaperParty($author,$publisher,$paper){
         $paperId=$paper->paperId;
         $relArray=array();
-        foreach ($data as $rel){
+        $pubArray=array();
+        foreach ($author as $rel){
             $arr=array("role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
-            array_push($relArray,$rel);
+                array_push($relArray,$arr);
         }
-        return $paper->party()->attach($relArray);
+        $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>now());
+        array_push($pubArray,$arrPub);
+        $paper->party()->attach($relArray);
+        $paper->party()->attach($pubArray);
+        $status=$publisher["status"];
+        $this->addpaperStaus($arrPub,$status);
+
     }
     public function deletePaperParty($data,$paper){
         $paperId=$paper->paperId;
@@ -103,6 +105,13 @@ class paperController extends Controller
             array_push($relArray,$rel);
             return $paper->party()->updateExistingPivot($arr, array('role' => $rel["role"]), false);
         }
+    }
+    public function addpaperStaus($data,$status){
+        $party=new party();
+        $party->partyId=$data["partyId"];
+        $paperId=$data["paperId"];
+        $id=$party->paper()->find($paperId)->pivot->id;
+        paperState::create(["statusId"=>$id,"status"=>$status,"date"=>now()]);
     }
 
 }

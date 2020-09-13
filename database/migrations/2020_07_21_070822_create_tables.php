@@ -53,6 +53,7 @@ class CreateTables extends Migration
             $table->mediumText("type")->nullable();
             $table->timestamps();
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
+            $table->foreign('partyId')->references('partyId')->on('journal')->onDelete('cascade');
         });
         Schema::create('paper', function (Blueprint $table) {
             $table->id('paperId');
@@ -63,6 +64,7 @@ class CreateTables extends Migration
             $table->timestamps();
         });
         Schema::create('paper_party', function (Blueprint $table) {
+            $table->id("id");
             $table->unsignedBigInteger("paperId");
             $table->unsignedBigInteger("partyId");
             $table->mediumText("role");
@@ -72,6 +74,8 @@ class CreateTables extends Migration
             $table->unique("paperId","partyId");
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
+            $table->foreign('id')->references('statusId')->on('paperState')->onDelete('cascade');
+
         });
         schema::create('education', function (Blueprint $table) {
             $table->id();
@@ -85,14 +89,13 @@ class CreateTables extends Migration
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
         });
         Schema::create('paperState', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('paperId');
-            $table->unsignedBigInteger('partyId');
+            $table->id("statusId");
             $table->mediumText('status');
             $table->timestamp('date');
             $table->timestamps();
 
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
+            $table->foreign('statusId')->references('id')->on('paper_party')->onDelete('cascade');
         });
         Schema::create('role', function (Blueprint $table) {
             $table->id('roleId');
@@ -113,7 +116,7 @@ class CreateTables extends Migration
             $table->id("partyId");
             $table->mediumText("issn")->nullable();
             $table->mediumText("impactFactor")->nullable();
-            $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
+            $table->foreign('partyId')->references('partyId')->on('organization')->onDelete('cascade');
         });
         Schema::create('contact',function(Blueprint $table){
             $table->id();

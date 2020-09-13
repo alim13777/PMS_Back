@@ -26,7 +26,7 @@ class party extends Model
        return $this->belongsToMany(role::class,'party_role','partyId',"roleId");
     }
     public function paper(){
-        return $this->belongsToMany(paper::class,"paper_party","partyId","paperId")->withPivot("role");
+        return $this->belongsToMany(paper::class,"paper_party","partyId","paperId")->withPivot("role","id");
     }
     public function hasAccess(array $permissions)
     {

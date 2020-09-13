@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\models\journal;
+use App\models\organization;
 use App\models\paper;
 use App\models\party;
 use App\models\person;
@@ -35,7 +37,7 @@ class partyController extends Controller
             'active'=>true,
         ]);
     }
-    public function searchPerson(Request $request){
+    public static function searchPerson($request){
         $person=DB::table('person')
             ->join('users','person.partyId','=','users.partyId')
             ->select('person.*',"users.email")
@@ -45,7 +47,12 @@ class partyController extends Controller
             ->get();
         return response()->json($person);
     }
-
+    public static function indexJournal(){
+        return DB::table('organization')
+            ->join('journal','organization.partyId','=','journal.partyId')
+            ->select('organization.partyId',"organization.name")
+            ->get();
+    }
 
 
 }
