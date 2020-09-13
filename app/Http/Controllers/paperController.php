@@ -106,7 +106,7 @@ class paperController extends Controller
             return $paper->party()->updateExistingPivot($arr, array('role' => $rel["role"]), false);
         }
     }
-    public function addpaperStaus($data,$status){
+    public function addPaperStatus($data,$status){
         $party=new party();
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];

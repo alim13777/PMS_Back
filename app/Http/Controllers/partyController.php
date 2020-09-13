@@ -53,6 +53,10 @@ class partyController extends Controller
             ->select('organization.partyId',"organization.name")
             ->get();
     }
+    public static function updatePerson($data){
+        $partyId=person::where("partyId",$data->person["partyId"])->update($data->person);
+        return response()->json(array("partyId"=>"$partyId"));
+    }
 
 
 }

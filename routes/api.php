@@ -62,11 +62,14 @@ Route::put("/paper/party",function(Request $request){
 Route::post("/paper/paperState",function (Request $request){
      $paperController=new paperController();
     $status=$request->status;
-    return $paperController->addpaperStaus($request->publisher,$status);
+    return $paperController->addPaperStatus($request->publisher,$status);
 });
 Route::get("/party/person",function (Request $request){
     return \App\Http\Controllers\partyController::searchPerson($request);
 });
 Route::get("/party/journal",function(){
     return \App\Http\Controllers\partyController::indexJournal();
+});
+Route::put("/party/person",function (Request $request){
+    return \App\Http\Controllers\partyController::updatePerson($request);
 });
