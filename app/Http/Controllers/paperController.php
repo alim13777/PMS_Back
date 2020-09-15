@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Ramsey\Collection\Collection;
 class paperController extends Controller
 {
+
     public function index()
     {
         return paper::all();
@@ -55,6 +56,7 @@ class paperController extends Controller
         }
         return response()->json($response);
     }
+
     public function createPaper($request){
         $paper=paper::create($request->paper);
         $author=$request->authors;
@@ -65,6 +67,13 @@ class paperController extends Controller
     public function editPaper(Request $request){
         $paperId=$request->paper["paperId"];
         return paper::where("paperId",$paperId)->update($request->paper);
+    }
+
+    public function getPaperParty($partyId,$paperId){
+        $party=new party();
+        $party->partyId=$partyId;
+        $paperId=$paperId;
+        return $party->paper()->find($paperId);
     }
     public function addPaperParty($author,$publisher,$paper){
         $paperId=$paper->paperId;
@@ -101,12 +110,7 @@ class paperController extends Controller
             return $paper->party()->updateExistingPivot($arr, array('role' => $rel["role"]), false);
         }
     }
-    public function getPaperParty($partyId,$paperId){
-        $party=new party();
-        $party->partyId=$partyId;
-        $paperId=$paperId;
-        return $party->paper()->find($paperId);
-    }
+
     public function addPaperStatus($data,$status){
         $party=new party();
         $party->partyId=$data["partyId"];

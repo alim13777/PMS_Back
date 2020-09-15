@@ -86,3 +86,15 @@ Route::put("/party/person",function (Request $request){
     $partyController=new partyController();
     return $partyController->updatePerson($request);
 })->middleware("auth:sanctum");
+Route::post("/file",function (Request $request){
+    $uploadFileContlorler=new \App\Http\Controllers\UploadFileController();
+    return $uploadFileContlorler->uploadFile($request);
+})->middleware("auth:sanctum");
+Route::get("/file",function (Request $request){
+    $uploadFileContlorler=new \App\Http\Controllers\UploadFileController();
+    return $uploadFileContlorler->getFile($request);
+})->middleware("auth:sanctum");
+Route::delete("/file",function (Request $request){
+    $uploadFileContlorler=new \App\Http\Controllers\UploadFileController();
+    return $uploadFileContlorler->deleteFile($request);
+})->middleware("auth:sanctum");

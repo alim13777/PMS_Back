@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class partyController extends Controller
 {
+
     public function createParty($data,$identity){
         $partyId=party::create(["identity"=>"person","owner"=>""])->partyId;
         if($identity=="person"){

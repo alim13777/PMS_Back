@@ -28,6 +28,9 @@ class party extends Model
     public function paper(){
         return $this->belongsToMany(paper::class,"paper_party","partyId","paperId")->withPivot("role","id");
     }
+    public function contact(){
+        return $this->hasOne('App\models\contact',"partyId","partyId");
+    }
     public function hasAccess(array $permissions)
     {
         foreach ($this->role()->get() as $role) {
