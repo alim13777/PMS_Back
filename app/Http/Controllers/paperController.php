@@ -79,7 +79,7 @@ class paperController extends Controller
         $paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
         $status=$publisher["status"];
-        $this->addPaperStatus($arrPub,$status);
+        return $this->addPaperStatus($arrPub,$status);
 
     }
     public function deletePaperParty($data,$paper){
@@ -111,7 +111,7 @@ class paperController extends Controller
         $party=new party();
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];
-        $id=$this->getPaperParty($paperId,$party->partyId);
+        $id=$this->getPaperParty($party->partyId,$paperId);
         if($id){$id=$id->pivot->id;
         paperState::create(["statusId"=>$id,"status"=>$status,"date"=>now()]);
         }
