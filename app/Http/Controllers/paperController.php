@@ -23,7 +23,7 @@ class paperController extends Controller
     $response = array();
     foreach ($papers as $paper) {
         $res=$this->find($paper->paperId)->original;
-        array_push($response,$res);
+        array_push($response,$res[0]);
     }
     return response()->json($response);
     }
