@@ -60,6 +60,7 @@ class CreateTables extends Migration
             $table->mediumText('title');
             $table->mediumText('type');
             $table->mediumText('description')->nullable();
+            $table->mediumText('localId')->nullable();
             $table->mediumText('keywords')->nullable();
             $table->timestamps();
         });
