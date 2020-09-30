@@ -42,9 +42,9 @@ class partyController extends Controller
         $person=DB::table('person')
             ->join('users','person.partyId','=','users.partyId')
             ->select('person.*',"users.email")
-            ->where('person.firstName','like',"%".$request['firstName']."%")
-            ->where('person.lastName','like',"%".$request["lastName"]."%")
-            ->where('users.email','like',"%".$request["email"]."%")
+            ->where('person.firstName','like',"%".$request['text']."%")
+            ->ORwhere('person.lastName','like',"%".$request["text"]."%")
+            ->ORwhere('users.email','like',"%".$request["text"]."%")
             ->get();
         return response()->json($person);
     }
