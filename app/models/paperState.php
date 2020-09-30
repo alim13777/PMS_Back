@@ -8,11 +8,13 @@ class paperState extends Model
 {
     protected $fillable=["statusId","status","date"];
     protected $table="paperState";
+    protected $primaryKey="statusId";
     public function paperState(){
         return $this->belongsTo("App\models\paper","paperId");
     }
     public function get($statusId){
-        return paperState::all()->where("statudId","=",$statusId);
+        return paperState::find($statusId);
+
     }
 
 }

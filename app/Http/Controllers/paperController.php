@@ -45,10 +45,13 @@ class paperController extends Controller
                         array_push($authors, $author);
                     }
                     if($organization->count()>0) {
+                        $publisher=array();
                         $paperStatus=$this->getPaperStatus($party->partyId,$paperId);
-                        $state=$paperStatus->count()>0?$paperStatus[0]->status:"";
-                        $date=$paperStatus->count()>0?$paperStatus[0]->date:"";
-                        $publisher = array("partyId" => $party->partyId,"name"=>$organization[0]->name,"status"=>$state,"date"=>$date);
+                        if($paperStatus!=null) {
+                            $state = $paperStatus->count() > 0 ? $paperStatus->status : "";
+                            $date = $paperStatus->count() > 0 ? $paperStatus->date : "";
+                            $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
+                        }
                         array_push($publishers, $publisher);
                     }
             }
@@ -122,11 +125,12 @@ class paperController extends Controller
     }
     public function getPaperStatus($partyId,$paperId)
     {
+
         $status = $this->getPaperParty($partyId, $paperId);
         $paperState=new paperState();
         if ($status) {
-        $statusId = $status->pivot->id;
-        $paperState = $paperState->get($statusId);
+         $statusId = $status->pivot->id;
+         $paperState = $paperState->get($statusId);
         }
         return $paperState;
     }

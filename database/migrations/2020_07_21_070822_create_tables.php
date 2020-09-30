@@ -29,7 +29,7 @@ class CreateTables extends Migration
         });
         Schema::create('party', function (Blueprint $table) {
             $table->id("partyId");
-            $table->mediumText("owner");
+            $table->mediumText("owner")->nullable();
             $table->mediumText("identity");
             $table->timestamps();
         });
