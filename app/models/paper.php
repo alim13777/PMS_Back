@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class paper extends Model
 {
-    protected $fillable=["paperId","localId","title","type","description","keywords"];
+    protected $fillable=["paperId","title","type","description","keywords"];
     protected $table="paper";
     protected $primaryKey="paperId";
 
@@ -14,6 +14,6 @@ class paper extends Model
         return $this->hasMany("App\models\paperState","paperId");
     }
     public function party(){
-        return $this->belongsToMany(party::class,"paper_party","paperId","partyId")->withPivot("role","id");
+        return $this->belongsToMany(party::class,"paper_party","paperId","partyId")->withPivot("role","id","localId");
     }
 }

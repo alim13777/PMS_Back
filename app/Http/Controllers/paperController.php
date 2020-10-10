@@ -4,6 +4,7 @@ use App\models\paper;
 use App\models\party;
 use App\models\person;
 use App\models\organization;
+use Carbon\Carbon;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\models\paperState;
@@ -41,7 +42,7 @@ class paperController extends Controller
                     if($user->count()>0){$email=$user[0]->email;}
                     else{$email="";}
                     if($person->count()>0){
-                        $author=array("partyId"=>$party->partyId,"partyRole"=>$party->pivot->role,"firstName"=>$person[0]->firstName,"lastName"=>$person[0]->lastName,"email"=>$email);
+                        $author=array("localId"=>$party->pivot->localId,"partyId"=>$party->partyId,"partyRole"=>$party->pivot->role,"firstName"=>$person[0]->firstName,"lastName"=>$person[0]->lastName,"email"=>$email);
                         array_push($authors, $author);
                     }
                     if($organization->count()>0) {
@@ -49,7 +50,7 @@ class paperController extends Controller
                         $paperStatus=$this->getPaperStatus($party->partyId,$paperId);
                         if($paperStatus!=null) {
                             $state = $paperStatus->count() > 0 ? $paperStatus->status : "";
-                            $date = $paperStatus->count() > 0 ? $paperStatus->date : "";
+                            $date = $paperStatus->count() > 0 ?Carbon::parse($paperStatus->date)->timestamp  : "";
                             $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
                         }
                         array_push($publishers, $publisher);
@@ -83,7 +84,8 @@ class paperController extends Controller
         $relArray=array();
         $pubArray=array();
         foreach ($author as $rel){
-            $arr=array("role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
+            $localId=$rel["localId"]?$rel["localId"]:"";
+            $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
                 array_push($relArray,$arr);
         }
         $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>now());

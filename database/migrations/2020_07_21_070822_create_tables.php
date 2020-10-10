@@ -60,7 +60,6 @@ class CreateTables extends Migration
             $table->mediumText('title');
             $table->mediumText('type');
             $table->mediumText('description')->nullable();
-            $table->mediumText('localId')->nullable();
             $table->mediumText('keywords')->nullable();
             $table->timestamps();
         });
@@ -68,6 +67,7 @@ class CreateTables extends Migration
             $table->id("id");
             $table->unsignedBigInteger("paperId");
             $table->unsignedBigInteger("partyId");
+            $table->mediumText('localId')->nullable();
             $table->mediumText("role");
             $table->timestamp("startDate");
             $table->timestamp("endDate")->nullable();
