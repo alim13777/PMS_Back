@@ -8,6 +8,7 @@ use App\models\paper;
 use App\models\party;
 use App\models\person;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\models\paperState;
@@ -46,6 +47,11 @@ class partyController extends Controller
             ->ORwhere('person.lastName','like',"%".$request["text"]."%")
             ->ORwhere('users.email','like',"%".$request["text"]."%")
             ->get();
+        foreach ($person as $per){
+            $per->birthDate=Carbon::parse( $per->birthDate)->timestamp;
+            $per->created_at=Carbon::parse( $per->created_at)->timestamp;
+            $per->updated_at=Carbon::parse( $per->updated_at)->timestamp;
+        }
         return response()->json($person);
     }
     public function indexJournal(){
