@@ -71,7 +71,7 @@ Route::put("/paper/party",function(Request $request){
 })->middleware("auth:sanctum");
 Route::post("/paper/paperState",function (Request $request){
      $paperController=new paperController();
-    $status=$request->status;
+    $status=$request->publisher["status"];
     return $paperController->addPaperStatus($request->publisher,$status);
 })->middleware("auth:sanctum");
 Route::get("/party/person/search",function (Request $request){

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class paperState extends Model
 {
-    protected $fillable=["statusId","status","date"];
+    protected $fillable=["statusId","paperPartyId","status","date"];
     protected $table="paperState";
     protected $primaryKey="statusId";
     public function paperState(){

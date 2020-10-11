@@ -75,7 +75,7 @@ class CreateTables extends Migration
             $table->unique("paperId","partyId");
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
             $table->foreign('partyId')->references('partyId')->on('party')->onDelete('cascade');
-            $table->foreign('id')->references('statusId')->on('paperState')->onDelete('cascade');
+            $table->foreign('id')->references('paperPartyId')->on('paperState')->onDelete('cascade');
 
         });
         schema::create('education', function (Blueprint $table) {
@@ -91,12 +91,13 @@ class CreateTables extends Migration
         });
         Schema::create('paperState', function (Blueprint $table) {
             $table->id("statusId");
+            $table->id("paperPartyId");
             $table->mediumText('status');
             $table->timestamp('date');
             $table->timestamps();
 
             $table->foreign('paperId')->references('paperId')->on('paper')->onDelete('cascade');
-            $table->foreign('statusId')->references('id')->on('paper_party')->onDelete('cascade');
+            $table->foreign('paperPartyId')->references('id')->on('paper_party')->onDelete('cascade');
         });
         Schema::create('role', function (Blueprint $table) {
             $table->id('roleId');

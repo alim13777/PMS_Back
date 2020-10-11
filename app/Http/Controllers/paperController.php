@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\models\paperState;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Cast\Object_;
 use Ramsey\Collection\Collection;
 class paperController extends Controller
 {
@@ -94,7 +95,6 @@ class paperController extends Controller
         $paper->party()->attach($pubArray);
         $status=$publisher["status"];
         return $this->addPaperStatus($arrPub,$status);
-
     }
     public function deletePaperParty($data,$paper){
         $paperId=$paper->paperId;
@@ -121,8 +121,15 @@ class paperController extends Controller
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];
         $id=$this->getPaperParty($party->partyId,$paperId);
-        if($id){$id=$id->pivot->id;
-        paperState::create(["statusId"=>$id,"status"=>$status,"date"=>now()]);
+        if($id){
+        $id=$id->pivot->id;
+        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>now()]);
+        }
+        else{
+            $paper=new paper();
+            $paper->paperId=$paperId;
+            $publisher=array("partyId"=>$data["partyId"],"status"=>$data["status"]);
+            return $this->addPaperParty([],$publisher,$paper);
         }
     }
     public function getPaperStatus($partyId,$paperId)
