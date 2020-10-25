@@ -82,6 +82,10 @@ Route::get("/party/journal",function(){
     $partyController=new partyController();
     return $partyController->indexJournal();
 })->middleware("auth:sanctum");
+Route::get("/party/person/{partyId}",function($partyId){
+    $partyController=new partyController();
+    return $partyController->getPerson($partyId);
+})->middleware("auth:sanctum");
 Route::put("/party/person",function (Request $request){
     $partyController=new partyController();
     return $partyController->updatePerson($request);

@@ -64,5 +64,8 @@ class partyController extends Controller
         $partyId=person::where("partyId",$data->person["partyId"])->update($data->person);
         return response()->json(array("partyId"=>"$partyId"));
     }
-
+    public function getPerson($partyId){
+        $person = person::where("partyId",$partyId)->get();
+        return response()->json($person);
+    }
 }
