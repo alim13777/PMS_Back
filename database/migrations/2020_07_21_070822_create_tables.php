@@ -90,7 +90,7 @@ class CreateTables extends Migration
         });
         Schema::create('paperState', function (Blueprint $table) {
             $table->id("statusId");
-            $table->id("paperPartyId");
+            $table->unsignedBigInteger("paperPartyId");
             $table->mediumText('status');
             $table->timestamp('date');
             $table->timestamps();
@@ -116,6 +116,7 @@ class CreateTables extends Migration
             $table->id("partyId");
             $table->mediumText("issn")->nullable();
             $table->mediumText("impactFactor")->nullable();
+            $table->timestamps();
             $table->foreign('partyId')->references('partyId')->on('organization')->onDelete('cascade');
         });
         Schema::create('contact',function(Blueprint $table){
