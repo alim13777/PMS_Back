@@ -61,7 +61,8 @@ class partyController extends Controller
             ->get();
     }
     public function updatePerson($data){
-        $partyId=person::where("partyId",$data->person["partyId"])->update($data->person);
+        $birthDate=Carbon::parse( $data->person["birthDate"])->toDateTime();
+        $partyId=person::where("partyId",$data->person["partyId"])->update(array("firstName"=>$data->person["firstName"],"lastName"=>$data->person["lastName"],"prefix"=>$data->person["prefix"],"gender"=>$data->person["gender"],"degree"=>$data->person["degree"],"birthDate"=>$birthDate));
         return response()->json(array("partyId"=>"$partyId"));
     }
     public function getPerson($partyId){
