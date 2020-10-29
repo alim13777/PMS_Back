@@ -36,22 +36,24 @@ class paperController extends Controller
             $authors = array();
             $publishers = array();
             $parties=$paper->party()->get();
-            foreach ($parties as $party){
+            foreach ($parties as $partyLoop){
+                    $party=new party();
+                    $party->partyId=$partyLoop->partyId;
                     $person = $party->person()->get();
                     $organization=$party->organization()->get();
                     $user=$party->user()->get();
+                    $email="";
                     if($user->count()>0){$email=$user[0]->email;}
-                    else{$email="";}
                     if($person->count()>0){
-                        $author=array("localId"=>$party->pivot->localId,"partyId"=>$party->partyId,"partyRole"=>$party->pivot->role,"firstName"=>$person[0]->firstName,"lastName"=>$person[0]->lastName,"email"=>$email);
+                        $author=array("localId"=>$partyLoop->pivot->localId,"partyId"=>$party->partyId,"partyRole"=>$partyLoop->pivot->role,"firstName"=>$person[0]->firstName,"lastName"=>$person[0]->lastName,"email"=>$email);
                         array_push($authors, $author);
                     }
                     if($organization->count()>0) {
                         $publisher=array();
-                        $paperStatus=$this->getPaperStatus($party->partyId,$paperId);
-                        if($paperStatus!=null) {
-                            $state = $paperStatus->count() > 0 ? $paperStatus->status : "";
-                            $date = $paperStatus->count() > 0 ?Carbon::parse($paperStatus->date)->timestamp  : "";
+                        $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
+                        foreach ($paperStatus as $status){
+                            $state = $status["status"];
+                            $date = Carbon::parse($status["date"])->timestamp;
                             $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
                         }
                         array_push($publishers, $publisher);
@@ -134,14 +136,72 @@ class paperController extends Controller
     }
     public function getPaperStatus($partyId,$paperId)
     {
-
         $status = $this->getPaperParty($partyId, $paperId);
         $paperState=new paperState();
         if ($status) {
-         $statusId = $status->pivot->id;
-         $paperState = $paperState->get($statusId);
+            $paperPartyId = $status->pivot->id;
+            $paperState = $paperState->findPaperState($paperPartyId);
         }
         return $paperState;
     }
 
+    public function paperStatics($partyId){
+        $papers=$this->findPartyPaper($partyId);
+        $papers=json_decode($papers->content(), true);
+        $statusList=array();
+        foreach ($papers as $paper){
+            $paperId=$paper["paper"]["paperId"];
+            foreach ($paper["publisher"] as $publisher){
+            $publisherId=$publisher["partyId"];
+            $status=$this->getPaperStatus($publisherId,$paperId);
+            array_push($statusList,$status);
+            }
+        }
+        $researching=0;$writing=0;$underEdit=0;$underReview=0;$readySubmit=0;
+        $submitting=0;$submitted=0;$underReview=0;$underEdit=0;$rejected=0;
+        $accepted=0;$canceled=0;
+        foreach ($statusList as $status){
+            foreach ($status as $oneStatus){
+            $state=$oneStatus["status"];
+            switch ($state){
+                case "researching":
+                    $researching++;
+                    break;
+                case "writing":
+                    $writing++;
+                    break;
+                case "readySubmit":
+                    $readySubmit++;
+                    break;
+                case "submitting":
+                    $submitting++;
+                    break;
+                case "submitted":
+                    $submitted++;
+                    break;
+                case "underReview":
+                    $underReview++;
+                    break;
+                case "underEdit":
+                    $underEdit++;
+                    break;
+                case "rejected":
+                    $rejected++;
+                    break;
+                case "accepted":
+                    $accepted++;
+                    break;
+                case "canceled":
+                    $canceled++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        }
+        $static=array(["researching"=>$researching,"writing"=>$writing,"underEdit"=>$underEdit
+        ,"underReview"=>$underReview,"readySubmit"=>$readySubmit,"submitting"=>$submitting,"submitted"=>$submitted,
+        "rejected"=>$rejected,"accepted"=>$accepted,"canceled"=>$canceled]);
+        return $static ;
+    }
 }

@@ -102,3 +102,7 @@ Route::delete("/file",function (Request $request){
     $uploadFileContlorler=new \App\Http\Controllers\UploadFileController();
     return $uploadFileContlorler->deleteFile($request);
 })->middleware("auth:sanctum");
+Route::get("/paper/party/{partyId}/statics",function ($partyId){
+    $paperController=new paperController();
+    return $paperController->paperStatics($partyId);
+})->middleware('auth:sanctum');
