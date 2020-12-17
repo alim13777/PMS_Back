@@ -18,9 +18,11 @@ use App\models\paper;
 */
 
 Auth::routes(['verify' => true]);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
