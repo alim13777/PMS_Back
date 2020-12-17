@@ -14,7 +14,7 @@ class VerificationController extends Controller
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
-        return redirect()->to('/');
+        return response()->json([],200);
     }
     public function resend(Request $request) {
         $email=$request->email;
