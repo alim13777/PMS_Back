@@ -86,8 +86,9 @@ class paperController extends Controller
         $paperId=$paper->paperId;
         $relArray=array();
         $pubArray=array();
+
         foreach ($author as $rel){
-            $localId=$rel["localId"]?$rel["localId"]:"";
+            $localId=$paper["localId"]?$paper["localId"]:"";
             $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
                 array_push($relArray,$arr);
         }
