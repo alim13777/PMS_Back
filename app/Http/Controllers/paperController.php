@@ -74,6 +74,13 @@ class paperController extends Controller
     }
     public function editPaper(Request $request){
         $paperId=$request->paper["paperId"];
+        $localId=$request->paper["localId"];
+        $partyId=$request->user()->partyId;
+
+        $paper=new paper();
+        $paper->paperId=$paperId;
+        $arr=array("partyId"=>$partyId,"paperId"=>$paperId);
+        $paper->party()->updateExistingPivot($arr,array("localId"=>$localId), false);
         return paper::where("paperId",$paperId)->update($request->paper);
     }
 
