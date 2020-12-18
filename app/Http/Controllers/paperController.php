@@ -18,18 +18,18 @@ class paperController extends Controller
     {
         return paper::all();
     }
-    public function findPartyPaper($partyId){
+    public function findPartyPaper($partyId,$currentUser){
     $partyObject = new party();
     $partyObject->partyId=$partyId;
     $papers = $partyObject->paper()->get();
     $response = array();
     foreach ($papers as $paper) {
-        $res=$this->find($paper->paperId)->original;
+        $res=$this->find($paper->paperId,$currentUser)->original;
         array_push($response,$res[0]);
     }
     return response()->json($response);
     }
-    public function find($paperId){
+    public function find($paperId,$currentUser){
         $papers = paper::where("paperId",$paperId)->get();
         $response = array();
         foreach ($papers as $paper) {
@@ -44,6 +44,7 @@ class paperController extends Controller
                     $user=$party->user()->get();
                     $email="";
                     if($user->count()>0){$email=$user[0]->email;}
+                    if($partyLoop->pivot->partyId==$currentUser->partyId)$paper->localId=$partyLoop->pivot->localId;
                     if($person->count()>0){
                         $author=array("localId"=>$partyLoop->pivot->localId,"partyId"=>$party->partyId,"partyRole"=>$partyLoop->pivot->role,"firstName"=>$person[0]->firstName,"lastName"=>$person[0]->lastName,"email"=>$email);
                         array_push($authors, $author);
@@ -59,7 +60,7 @@ class paperController extends Controller
                         array_push($publishers, $publisher);
                     }
             }
-            array_push($response,array("paper"=>$paper,"authors"=>$authors,"publisher"=>$publishers));
+                    array_push($response,array("paper"=>$paper,"authors"=>$authors,"publisher"=>$publishers));
         }
         return response()->json($response);
     }

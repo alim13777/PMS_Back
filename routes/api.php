@@ -29,19 +29,22 @@ Route::get('email/resend', 'VerificationController@resend')->name('verification.
 Route::get("/paper/party",function(Request $request){
     $partyId=$request->user()->partyId;
     $paperController=new paperController();
-    return $paperController->findPartyPaper($partyId);
+    $user=$request->user();
+    return $paperController->findPartyPaper($partyId,$user);
 })->middleware("auth:sanctum");
-Route::get("/paper/party/{partyId}",function($partyId){
+Route::get("/paper/party/{partyId}",function($partyId,Request $request){
     $paperController=new paperController();
-    return $paperController->findPartyPaper($partyId);
+    $user=$request->user();
+    return $paperController->findPartyPaper($partyId,$user);
 })->middleware("auth:sanctum");
 Route::get("/paper",function(){
     $paperController=new paperController();
     return $paperController->index();
 })->middleware("auth:sanctum");
-Route::get("/paper/{paperId}",function($paperId){
+Route::get("/paper/{paperId}",function($paperId,Request $request){
     $paperController=new paperController();
-    return $paperController->find($paperId);
+    $user=$request->user();
+    return $paperController->find($paperId,$user);
 })->middleware("auth:sanctum");
 Route::post("/paper",function (Request $request){
     $paperController=new paperController();
