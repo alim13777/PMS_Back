@@ -25,7 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('email/verify', 'VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
-
+Route::put("/changePassword",function(Request $request){
+     $user=$request->user();
+     $registerController=new \App\Http\Controllers\Auth\RegisterController();
+     return $registerController->changePassword($request,$user);
+})->middleware("auth:sanctum");
 Route::get("/paper/party",function(Request $request){
     $partyId=$request->user()->partyId;
     $paperController=new paperController();

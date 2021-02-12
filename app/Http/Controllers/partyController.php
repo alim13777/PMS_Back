@@ -61,12 +61,32 @@ class partyController extends Controller
             ->get();
     }
     public function updatePerson($data){
-        $birthDate=Carbon::parse( $data->person["birthDate"])->toDateTime();
-        $partyId=person::where("partyId",$data->person["partyId"])->update(array("firstName"=>$data->person["firstName"],"lastName"=>$data->person["lastName"],"prefix"=>$data->person["prefix"],"gender"=>$data->person["gender"],"degree"=>$data->person["degree"],"birthDate"=>$birthDate));
+         $timestamp =substr($data->person["birthDate"],0,10);
+         $dt=NULL;
+         if($timestamp) {
+             $sourceTimezone = new \DateTimeZone("GMT");
+             $destinationTimezone = new \DateTimeZone('Asia/Tehran');
+             $dt = new \DateTime(date('m/d/Y h:i A', $timestamp), $sourceTimezone);
+             $dt->setTimeZone($destinationTimezone);
+         }
+        $arr=array("firstName"=>$data->person["firstName"],"lastName"=>$data->person["lastName"],"prefix"=>$data->person["prefix"],"gender"=>$data->person["gender"],"degree"=>$data->person["degree"],"birthDate"=>$dt);
+        $partyId=person::where("partyId",$data->person["partyId"])->update($arr);
         return response()->json(array("partyId"=>"$partyId"));
     }
     public function getPerson($partyId){
         $person = person::where("partyId",$partyId)->get();
         return response()->json($person);
+    }
+
+    public function changePassword($data,$user){
+
+//        $data->validate([
+//            'current_password' => ['required', new MatchOldPassword],
+//            'new_password' => ['required'],
+//            'new_confirm_password' => ['same:new_password'],
+//        ]);
+        $this->validator($data->all())->validate();
+        User::find($user->id)->update(['password'=> Hash::make($data->new_password)]);
+
     }
 }

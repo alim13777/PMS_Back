@@ -58,6 +58,12 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
+    protected function changeValidator(array $data)
+    {
+        return Validator::make($data, [
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -79,6 +85,10 @@ class RegisterController extends Controller
             return $response;
         }
         return response()->json([],200);
+    }
+    public function changePassword($data,$user){
+        $this->changeValidator($data->all())->validate();
+        User::find($user->id)->update(['password'=> Hash::make($data->new_password)]);
     }
 
 }

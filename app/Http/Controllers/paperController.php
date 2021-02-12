@@ -67,6 +67,7 @@ class paperController extends Controller
 
     public function createPaper($request){
         $paper=paper::create($request->paper);
+        $paper->localId=$request->paper["localId"]?$request->paper["localId"]:"";
         $author=$request->authors;
         $publisher=$request->publisher;
         $this->addPaperParty($author,$publisher,$paper);
