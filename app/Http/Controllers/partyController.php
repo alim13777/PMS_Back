@@ -61,7 +61,7 @@ class partyController extends Controller
             ->get();
     }
     public function updatePerson($data){
-         $timestamp =substr($data->person["birthDate"],0,10);
+         if(isset($data->person["birthDate"]))$timestamp =substr($data->person["birthDate"],0,10);
          $dt=NULL;
          if($timestamp) {
              $sourceTimezone = new \DateTimeZone("GMT");
@@ -75,6 +75,7 @@ class partyController extends Controller
     }
     public function getPerson($partyId){
         $person = person::where("partyId",$partyId)->get();
+        if(isset($person[0]["birthDate"]))$person[0]["birthDate"]=strtotime($person[0]["birthDate"]);
         return response()->json($person);
     }
 
