@@ -54,7 +54,7 @@ class paperController extends Controller
                         $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
                         foreach ($paperStatus as $status){
                             $state = $status["status"];
-                            $date = Carbon::parse($status["date"])->timestamp;
+                            $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
                             $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
                         }
                         array_push($publishers, $publisher);

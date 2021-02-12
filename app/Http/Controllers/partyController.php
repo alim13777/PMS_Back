@@ -75,10 +75,9 @@ class partyController extends Controller
     }
     public function getPerson($partyId){
         $person = person::where("partyId",$partyId)->get();
-        if(isset($person[0]["birthDate"]))$person[0]["birthDate"]=Carbon::parse($person[0]["birthDate"])->timestamp;
+        if(isset($person[0]["birthDate"]))$person[0]["birthDate"]=Carbon::parse($person[0]["birthDate"])->getPreciseTimestamp(3);
         return response()->json($person);
     }
-
     public function changePassword($data,$user){
 
 //        $data->validate([
