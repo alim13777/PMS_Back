@@ -75,7 +75,7 @@ class partyController extends Controller
     }
     public function getPerson($partyId){
         $person = person::where("partyId",$partyId)->get();
-        if(isset($person[0]["birthDate"]))$person[0]["birthDate"]=strtotime($person[0]["birthDate"]);
+        if(isset($person[0]["birthDate"]))$person[0]["birthDate"]=Carbon::parse($person[0]["birthDate"])->timestamp;
         return response()->json($person);
     }
 
