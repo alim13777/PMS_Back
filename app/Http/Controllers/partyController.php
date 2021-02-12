@@ -62,14 +62,7 @@ class partyController extends Controller
     }
     public function updatePerson($data){
          if(isset($data->person["birthDate"]))$timestamp =substr($data->person["birthDate"],0,10);
-         $dt=NULL;
-         if($timestamp) {
-             $sourceTimezone = new \DateTimeZone("GMT");
-             $destinationTimezone = new \DateTimeZone('Asia/Tehran');
-             $dt = new \DateTime(date('m/d/Y h:i A', $timestamp), $sourceTimezone);
-             $dt->setTimeZone($destinationTimezone);
-         }
-        $arr=array("firstName"=>$data->person["firstName"],"lastName"=>$data->person["lastName"],"prefix"=>$data->person["prefix"],"gender"=>$data->person["gender"],"degree"=>$data->person["degree"],"birthDate"=>$dt);
+        $arr=array("firstName"=>$data->person["firstName"],"lastName"=>$data->person["lastName"],"prefix"=>$data->person["prefix"],"gender"=>$data->person["gender"],"degree"=>$data->person["degree"],"birthDate"=>$timestamp);
         $partyId=person::where("partyId",$data->person["partyId"])->update($arr);
         return response()->json(array("partyId"=>"$partyId"));
     }
