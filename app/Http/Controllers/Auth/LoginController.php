@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-
+use App\models\person;
 class LoginController extends Controller
 {
     /*
@@ -40,8 +40,9 @@ class LoginController extends Controller
     }
     protected function authenticated(Request $request, $user)
     {
-        $data=$user->party->person()->get()[0];
+
         $partyId=$user->partyId;
+        $data=person::find($partyId);
         $data=array("partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"email"=>$user["email"]);
         return response()->json($data);
     }

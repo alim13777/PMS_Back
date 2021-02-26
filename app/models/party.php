@@ -17,7 +17,7 @@ class party extends Model
         return $this->hasMany('App\models\education',"partyId");
     }
     public function person(){
-        return $this->hasOne('App\models\person','partyId');
+        return $this->hasOne('App\models\person',"partyId");
     }
     public function organization(){
         return $this->hasOne('App\models\organization','partyId');
