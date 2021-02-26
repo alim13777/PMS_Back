@@ -40,7 +40,6 @@ class LoginController extends Controller
     }
     protected function authenticated(Request $request, $user)
     {
-
         $partyId=$user->partyId;
         $data=person::find($partyId);
         $data=array("partyId"=>$partyId,"firstName"=>$data["firstName"],"lastName"=>$data["lastName"],"email"=>$user["email"]);

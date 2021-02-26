@@ -66,12 +66,16 @@ class paperController extends Controller
     }
 
     public function createPaper($request){
-        $paper=paper::create($request->paper);
+
+        $paperRequest=$request->paper;
+        $paperArr=array("title"=>$paperRequest["title"],"type"=>$paperRequest["type"],"description"=>$paperRequest["description"],"keywords"=>$paperRequest["keywords"]);
+        $paper=paper::create($paperArr);
         $paper->localId=$request->paper["localId"]?$request->paper["localId"]:"";
         $author=$request->authors;
         $publisher=$request->publisher;
         $this->addPaperParty($author,$publisher,$paper);
         return response()->json(["paperId"=>$paper->paperId],200);
+
     }
     public function editPaper(Request $request){
         $paperId=$request->paper["paperId"];
@@ -95,15 +99,14 @@ class paperController extends Controller
         $paperId=$paper->paperId;
         $relArray=array();
         $pubArray=array();
-
         foreach ($author as $rel){
             $localId=$paper["localId"]?$paper["localId"]:"";
             $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
-                array_push($relArray,$arr);
+            array_push($relArray,$arr);
         }
-        $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>now());
+        $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>substr($publisher["startDate"],0,10));
         array_push($pubArray,$arrPub);
-        $paper->party()->attach($relArray);
+        //$paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
         $status=$publisher["status"];
         return $this->addPaperStatus($arrPub,$status);
