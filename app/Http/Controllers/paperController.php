@@ -79,14 +79,15 @@ class paperController extends Controller
     }
     public function editPaper(Request $request){
         $paperId=$request->paper["paperId"];
+        $paperRequest=$request->paper;
         $localId=$request->paper["localId"];
         $partyId=$request->user()->partyId;
-
         $paper=new paper();
         $paper->paperId=$paperId;
         $arr=array("partyId"=>$partyId,"paperId"=>$paperId);
         $paper->party()->updateExistingPivot($arr,array("localId"=>$localId), false);
-        return paper::where("paperId",$paperId)->update($request->paper);
+        $paperArr=array("title"=>$paperRequest["title"],"type"=>$paperRequest["type"],"description"=>$paperRequest["description"],"keywords"=>$paperRequest["keywords"]);
+        return paper::where("paperId",$paperId)->update($paperArr);
     }
 
     public function getPaperParty($partyId,$paperId){
@@ -106,7 +107,7 @@ class paperController extends Controller
         }
         $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>substr($publisher["startDate"],0,10));
         array_push($pubArray,$arrPub);
-        //$paper->party()->attach($relArray);
+        $paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
         $status=$publisher["status"];
         return $this->addPaperStatus($arrPub,$status);
