@@ -64,6 +64,7 @@ Route::post("/paper/party",function(Request $request){
     $paperController=new paperController();
     $publisher=$request->publisher;
     $author=$request->author;
+    if(!$author)$author=[];
     return $paperController->addPaperParty($author,$publisher,$paper);
 })->middleware("auth:sanctum");
 Route::delete("/paper/party",function(Request $request){

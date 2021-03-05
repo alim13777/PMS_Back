@@ -23,6 +23,7 @@ class paperController extends Controller
     $partyObject->partyId=$partyId;
     $papers = $partyObject->paper()->get();
     $response = array();
+
     foreach ($papers as $paper) {
         $res=$this->find($paper->paperId,$currentUser)->original;
         array_push($response,$res[0]);
@@ -41,6 +42,7 @@ class paperController extends Controller
                     $party->partyId=$partyLoop->partyId;
                     $person = $party->person()->get();
                     $organization=$party->organization()->get();
+
                     $user=$party->user()->get();
                     $email="";
                     if($user->count()>0){$email=$user[0]->email;}
@@ -101,6 +103,7 @@ class paperController extends Controller
         $relArray=array();
         $pubArray=array();
         $status=$publisher["status"];
+
         foreach ($author as $rel){
             $localId=$paper["localId"]?$paper["localId"]:"";
             $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
