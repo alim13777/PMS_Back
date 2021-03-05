@@ -26,7 +26,7 @@ class party extends Model
        return $this->belongsToMany(role::class,'party_role','partyId',"roleId");
     }
     public function paper(){
-        return $this->belongsToMany(paper::class,"paper_party","partyId","paperId")->withPivot("role","id","localId");
+        return $this->belongsToMany(paper::class,"paper_party","partyId","paperId")->withPivot("role","partyId","paperId","startDate","endDate","localId");;
     }
     public function contact(){
         return $this->hasOne('App\models\contact',"partyId","partyId");

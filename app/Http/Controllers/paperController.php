@@ -100,6 +100,7 @@ class paperController extends Controller
         $paperId=$paper->paperId;
         $relArray=array();
         $pubArray=array();
+        $status=$publisher["status"];
         foreach ($author as $rel){
             $localId=$paper["localId"]?$paper["localId"]:"";
             $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
@@ -109,7 +110,6 @@ class paperController extends Controller
         array_push($pubArray,$arrPub);
         $paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
-        $status=$publisher["status"];
         return $this->addPaperStatus($arrPub,$status);
     }
     public function deletePaperParty($data,$paper){
@@ -137,15 +137,18 @@ class paperController extends Controller
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];
         $id=$this->getPaperParty($party->partyId,$paperId);
-        if($id){
-        $id=$id->pivot->id;
-        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>now()]);
-        }
-        else{
+        if(!$id){
+            return "ssss";
             $paper=new paper();
             $paper->paperId=$paperId;
-            $publisher=array("partyId"=>$data["partyId"],"status"=>$data["status"]);
-            return $this->addPaperParty([],$publisher,$paper);
+            $publisher=array("partyId"=>$data["partyId"],"paperId"=>$paperId,"role"=>$data["role"],"localId"=>"","startDate"=>now());
+            $paper->party()->attach($publisher);
+            $ids=$this->getPaperParty($party->partyId,$paperId);
+            paperState::create(["paperPartyId"=>$ids,"status"=>$status,"date"=>$data["startDate"]]);
+        }
+        if($id){
+        $id=$id->pivot->id;
+        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["startDate"]]);
         }
     }
     public function getPaperStatus($partyId,$paperId)
