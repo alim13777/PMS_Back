@@ -52,8 +52,10 @@ class paperController extends Controller
                     }
                     if($organization->count()>0) {
                         $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
-                        $status=end($paperStatus);
+                        $status=last($paperStatus);
+
                         if(!$status)continue;
+                        $status=$status[0];
                         $state = $status["status"];
                         $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
                         $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
@@ -154,8 +156,8 @@ class paperController extends Controller
         $status = $this->getPaperParty($partyId, $paperId);
         $paperState=new paperState();
         if ($status) {
-            $paperPartyId = $status->pivot->id;
-            $paperState = $paperState->findPaperState($paperPartyId);
+             $paperPartyId = $status->pivot->id;
+             $paperState = $paperState->findPaperState($paperPartyId);
         }
         return $paperState;
     }
