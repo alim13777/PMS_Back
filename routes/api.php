@@ -34,12 +34,12 @@ Route::get("/paper/party",function(Request $request){
     $partyId=$request->user()->partyId;
     $paperController=new paperController();
     $user=$request->user();
-    return $paperController->findPartyPaper($partyId,$user);
+    return $paperController->findPartyPaper($partyId,$user,false);
 })->middleware("auth:sanctum");
 Route::get("/paper/party/{partyId}",function($partyId,Request $request){
     $paperController=new paperController();
     $user=$request->user();
-    return $paperController->findPartyPaper($partyId,$user);
+    return $paperController->findPartyPaper($partyId,$user,false);
 })->middleware("auth:sanctum");
 Route::get("/paper",function(){
     $paperController=new paperController();
@@ -48,7 +48,8 @@ Route::get("/paper",function(){
 Route::get("/paper/{paperId}",function($paperId,Request $request){
     $paperController=new paperController();
     $user=$request->user();
-    return $paperController->find($paperId,$user);
+    $history=isset($request["history"])?$request["history"]:false;
+    return $paperController->find($paperId,$user,$history);
 })->middleware("auth:sanctum");
 Route::post("/paper",function (Request $request){
     $paperController=new paperController();

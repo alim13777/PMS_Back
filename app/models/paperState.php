@@ -17,7 +17,7 @@ class paperState extends Model
 
     }
     public function findPaperState($paperPartyId){
-       return  paperState::where("paperPartyId",$paperPartyId)->get();
+       return  paperState::where("paperPartyId",$paperPartyId)->orderBy("date")->get();
     }
 
 }
