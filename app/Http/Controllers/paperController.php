@@ -107,7 +107,7 @@ class paperController extends Controller
             $arr=array("localId"=>$localId,"role"=>$rel["role"],"partyId"=>$rel["partyId"],"paperId"=>$paperId,"startDate"=>now());
             array_push($relArray,$arr);
         }
-        $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>substr($publisher["startDate"],0,10));
+        $arrPub=array("partyId"=>$publisher["partyId"],"paperId"=>$paperId,"role"=>"publisher","startDate"=>substr($publisher["date"],0,10));
         array_push($pubArray,$arrPub);
         $paper->party()->attach($relArray);
         $paper->party()->attach($pubArray);
@@ -143,11 +143,11 @@ class paperController extends Controller
             $publisher=array("partyId"=>$data["partyId"],"paperId"=>$paperId,"role"=>$data["role"],"localId"=>"","startDate"=>now());
             $paper->party()->attach($publisher);
             $ids=$this->getPaperParty($party->partyId,$paperId);
-            paperState::create(["paperPartyId"=>$ids,"status"=>$status,"date"=>$data["startDate"]]);
+            paperState::create(["paperPartyId"=>$ids,"status"=>$status,"date"=>$data["date"]]);
         }
         if($id){
         $id=$id->pivot->id;
-        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["startDate"]]);
+        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["date"]]);
         }
 
     }
