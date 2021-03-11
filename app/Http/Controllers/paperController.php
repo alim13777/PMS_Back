@@ -50,13 +50,11 @@ class paperController extends Controller
                         array_push($authors, $author);
                     }
                     if($organization->count()>0) {
-                        $publisher=array();
                         $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
-                        foreach ($paperStatus as $status){
-                            $state = $status["status"];
-                            $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
-                            $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
-                        }
+                        $status=$paperStatus[sizeof($paperStatus)-1];
+                        $state = $status["status"];
+                        $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
+                        $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
                         array_push($publishers, $publisher);
                     }
             }
@@ -64,7 +62,6 @@ class paperController extends Controller
         }
         return response()->json($response);
     }
-
     public function createPaper($request){
 
         $paperRequest=$request->paper;
@@ -89,7 +86,6 @@ class paperController extends Controller
         $paperArr=array("title"=>$paperRequest["title"],"type"=>$paperRequest["type"],"description"=>$paperRequest["description"],"keywords"=>$paperRequest["keywords"]);
         return paper::where("paperId",$paperId)->update($paperArr);
     }
-
     public function getPaperParty($partyId,$paperId){
         $party=new party();
         $party->partyId=$partyId;
@@ -131,14 +127,12 @@ class paperController extends Controller
             return $paper->party()->updateExistingPivot($arr, array('role' => $rel["role"]), false);
         }
     }
-
     public function addPaperStatus($data,$status){
         $party=new party();
         $party->partyId=$data["partyId"];
         $paperId=$data["paperId"];
         $id=$this->getPaperParty($party->partyId,$paperId);
         if(!$id){
-            return "ssss";
             $paper=new paper();
             $paper->paperId=$paperId;
             $publisher=array("partyId"=>$data["partyId"],"paperId"=>$paperId,"role"=>$data["role"],"localId"=>"","startDate"=>now());
@@ -150,6 +144,7 @@ class paperController extends Controller
         $id=$id->pivot->id;
         paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["startDate"]]);
         }
+
     }
     public function getPaperStatus($partyId,$paperId)
     {
@@ -161,7 +156,6 @@ class paperController extends Controller
         }
         return $paperState;
     }
-
     public function paperStatics($partyId){
         $papers=$this->findPartyPaper($partyId);
         $papers=json_decode($papers->content(), true);
@@ -221,4 +215,5 @@ class paperController extends Controller
         "rejected"=>$rejected,"accepted"=>$accepted,"canceled"=>$canceled]);
         return $static ;
     }
+
 }
