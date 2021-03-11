@@ -36,7 +36,7 @@ class paperController extends Controller
         foreach ($papers as $paper) {
             $authors = array();
             $publishers = array();
-            $parties=$paper->party()->get();
+            $parties = $paper->party()->get();
             foreach ($parties as $partyLoop) {
                 $party = new party();
                 $party->partyId = $partyLoop->partyId;
@@ -52,29 +52,29 @@ class paperController extends Controller
                     $author = array("localId" => $partyLoop->pivot->localId, "partyId" => $party->partyId, "partyRole" => $partyLoop->pivot->role, "firstName" => $person[0]->firstName, "lastName" => $person[0]->lastName, "email" => $email);
                     array_push($authors, $author);
                 }
-                $paperStatus=array();
+                $paperStatus = array();
+                if (!($organization->count() > 0)) continue;
                 if ($organization->count() > 0) {
                     $paperStatus = $this->getPaperStatus($organization[0]["partyId"], $paperId);
                 }
-            }
-                        if(!$history){
-                        $index=sizeof($paperStatus);
-                        if($index==0)continue;
-                        $status=$paperStatus[$index-1];
+                if (!$history) {
+                    $index = sizeof($paperStatus);
+                    if ($index == 0) continue;
+                    $status = $paperStatus[$index - 1];
+                    $state = $status["status"];
+                    $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
+                    $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
+                    array_push($publishers, $publisher);
+                } else {
+                    foreach ($paperStatus as $status) {
                         $state = $status["status"];
                         $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
                         $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
-                        array_push($publishers, $publisher);
+                        if(!in_array($publisher,$publishers))array_push($publishers, $publisher);
                     }
-                        else{
-                            foreach ($paperStatus as $status){
-                                $state = $status["status"];
-                                $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
-                                $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
-                                array_push($publishers, $publisher);
-                            }
-                        }
-                    }
+                }
+            }
+        }
                     array_push($response,array("paper"=>$paper,"authors"=>$authors,"publisher"=>$publishers));
                     return response()->json($response);
     }
