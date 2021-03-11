@@ -42,7 +42,6 @@ class paperController extends Controller
                     $party->partyId=$partyLoop->partyId;
                     $person = $party->person()->get();
                     $organization=$party->organization()->get();
-
                     $user=$party->user()->get();
                     $email="";
                     if($user->count()>0){$email=$user[0]->email;}
@@ -53,7 +52,8 @@ class paperController extends Controller
                     }
                     if($organization->count()>0) {
                         $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
-                        $status=$paperStatus[sizeof($paperStatus)-1];
+                        $status=end($paperStatus);
+                        if(!$status)continue;
                         $state = $status["status"];
                         $date = Carbon::parse($status["date"])->getPreciseTimestamp(3);;
                         $publisher = array("partyId" => $party->partyId, "name" => $organization[0]->name, "status" => $state, "date" => $date);
