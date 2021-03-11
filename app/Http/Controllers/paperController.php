@@ -53,7 +53,6 @@ class paperController extends Controller
                     if($organization->count()>0) {
                         $paperStatus=$this->getPaperStatus($organization[0]["partyId"],$paperId);
                         $status=last($paperStatus);
-
                         if(!$status)continue;
                         $status=$status[0];
                         $state = $status["status"];
@@ -143,11 +142,11 @@ class paperController extends Controller
             $publisher=array("partyId"=>$data["partyId"],"paperId"=>$paperId,"role"=>$data["role"],"localId"=>"","startDate"=>now());
             $paper->party()->attach($publisher);
             $ids=$this->getPaperParty($party->partyId,$paperId);
-            paperState::create(["paperPartyId"=>$ids,"status"=>$status,"date"=>$data["date"]]);
+            paperState::create(["paperPartyId"=>$ids,"status"=>$status,"date"=>$data["startDate"]]);
         }
         if($id){
         $id=$id->pivot->id;
-        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["date"]]);
+        paperState::create(["paperPartyId"=>$id,"status"=>$status,"date"=>$data["startDate"]]);
         }
 
     }
